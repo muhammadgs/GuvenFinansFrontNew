@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Giriş et | Güvən Finans</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/cal-sans@1.0.1/public/web/cal-sans.css" rel="stylesheet" />
+
+  <!-- Global CSS (səndə olan) -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+
+  <!-- Login CSS -->
+  <link rel="stylesheet" href="assets/css/login.css" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="assets/images/favicon.png">
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<main class="auth-page">
+  <section class="auth-hero">
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="auth-head">
+          <h1 class="auth-title">Giriş et</h1>
+          <p class="auth-subtitle">Zəhmət olmasa məlumatlarınızı daxil edin.</p>
+        </div>
+
+        <!-- status message (JS ilə doldura bilərsən) -->
+        <div class="auth-status is-hidden" id="authStatus"></div>
+
+        <form class="auth-form" id="loginForm" action="#" method="post" novalidate>
+          <div class="field">
+            <label for="login" class="field-label">Email və ya nömrə</label>
+            <div class="field-control">
+              <i class="fa-regular fa-user field-icon"></i>
+              <input
+                      type="text"
+                      id="login"
+                      name="login"
+                      class="field-input"
+                      placeholder="example@mail.com və ya +994..."
+                      required
+                      autocomplete="username"
+              />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="password" class="field-label">Şifrə</label>
+            <div class="field-control">
+              <i class="fa-solid fa-lock field-icon"></i>
+              <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      class="field-input"
+                      placeholder="Şifrənizi daxil edin"
+                      required
+                      autocomplete="current-password"
+              />
+            </div>
+          </div>
+
+          <button type="submit" class="auth-btn">
+            Daxil ol
+          </button>
+
+          <p class="auth-footer">
+            Hesabınız yoxdur?
+            <a href="register.html" class="auth-link">Qeydiyyatdan keçin</a>
+          </p>
+
+          <p class="auth-footer">
+            Artıq hesabınız var?
+            <a href="login.html" class="auth-link">Daxil olun</a>
+          </p>
+        </form>
+      </div>
+
+      <a class="auth-back" href="index.html">
+        <i class="fa-solid fa-arrow-left"></i> Ana səhifəyə qayıt
+      </a>
+    </div>
+  </section>
+</main>
+<script src="assets/js/login_js/main.js"></script>
+<script src="assets/js/login_js/login.js?v=20260123"></script>
+</body>
+</html>

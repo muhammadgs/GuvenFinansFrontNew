@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Sahibkar qeydiyyatı | Güvən Finans</title>
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/cal-sans@1.0.1/public/web/cal-sans.css" rel="stylesheet">
+
+  <!-- Global CSS -->
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <!-- Page-specific CSS -->
+  <link rel="stylesheet" href="assets/css/register-owner.css">
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="assets/images/favicon.png">
+
+</head>
+
+<body class="page-owner-register loaded">
+<!-- Loader -->
+<div id="gti-loader" class="gti-loader" style="display: none;">
+  <div class="gti-loader-content">
+    <div class="gti-loader-logo">
+      <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Your logo SVG here -->
+      </svg>
+    </div>
+    <div class="gti-loader-spinner"></div>
+  </div>
+</div>
+
+<div id="site-shell" style="pointer-events: auto;">
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- HEADER -->
+  <header id="main-header" class="site-header header-scrolled no-scroll-effect">
+    <div class="topbar">
+      <div class="topbar-left">
+        <a href="mailto:info@guvenfinans.az" class="nav-link topbar-link">
+          <i class="fas fa-envelope"></i> info@guvenfinans.az
+        </a>
+
+        <a id="header-phone-link" href="tel:+994557636993" class="nav-link topbar-link topbar-phone">
+          <i class="fas fa-phone-alt"></i> +994 55 763 69 93
+        </a>
+      </div>
+
+      <div class="topbar-right">
+        <a href="#" class="social-icon" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        <a href="#" class="social-icon" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" class="social-icon" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="#" class="social-icon" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+      </div>
+    </div>
+
+    <hr id="header-divider" class="header-divider">
+  </header>
+
+  <!-- MAIN -->
+  <main id="main" class="main">
+    <section class="owner-register">
+      <div class="owner-container">
+        <header class="owner-header">
+          <h1 class="owner-title">Sahibkar olaraq qeydiyyatdan keçin</h1>
+          <p class="owner-subtitle">Şirkətinizi qeydiyyatdan keçirərək Güvən Finans sistemində işlərinizi idarə edin</p>
+        </header>
+
+        <!-- Status message container -->
+        <div class="api-status hidden" data-api-status="" aria-live="polite"></div>
+
+        <form class="owner-form" data-owner-registration="" data-success-redirect="login.html" action="#" method="post" novalidate>
+
+          <!-- Şirkət Kodu Bölməsi -->
+          <div class="company-code-section">
+            <h3><i class="fas fa-building"></i> Şirkət Koduna Qoşulma (İstəyə bağlı)</h3>
+
+            <div class="field">
+              <label for="company_code">Şirkət Kodu</label>
+              <div class="code-input-group">
+                <input
+                  type="text"
+                  id="company_code"
+                  name="company_code"
+                  data-company-code-input
+                  placeholder="Şirkət kodunu daxil edin"
+                  autocomplete="off"
+                >
+              </div>
+
+              <!-- Şirkət adı göstəricisi -->
+              <div id="companyNameDisplay" class="company-name-display" style="display: none; margin-top: 8px;">
+                <strong>Şirkət adı:</strong> <span id="verifiedCompanyName"></span>
+              </div>
+
+              <div class="field-note">
+                Şirkət kodu daxil etsəniz, bu şirkətin alt şirkəti olaraq qeydiyyatdan keçəcəksiniz.
+                Boş buraxarsanız, müstəqil şirkət olaraq qeydiyyatdan keçəcəksiniz.
+              </div>
+            </div>
+          </div>
+
+          <!-- Şirkət Adı -->
+          <div class="field">
+            <label for="company_name">Şirkət Adı *</label>
+            <input id="company_name" name="company_name" type="text" required
+                   placeholder="Məsələn: Güvən Finans MMC">
+            <div class="field-error">Zəhmət olmasa şirkət adını daxil edin</div>
+          </div>
+
+          <!-- Şirkət rəhbəri məlumatları -->
+          <div class="section-title">
+            <h3>Şirkət rəhbəri məlumatları</h3>
+          </div>
+
+          <div class="owner-grid">
+            <!-- Ad -->
+            <div class="field">
+              <label for="ceo_name">Ad</label>
+              <input id="ceo_name" name="ceo_name" type="text"
+                     placeholder="Məsələn: Kamran">
+            </div>
+
+            <!-- Soyad -->
+            <div class="field">
+              <label for="ceo_lastname">Soyad</label>
+              <input id="ceo_lastname" name="ceo_lastname" type="text"
+                     placeholder="Məsələn: Əliyev">
+            </div>
+
+            <!-- Email -->
+            <div class="field">
+              <label for="email">E-poçt *</label>
+              <input id="email" name="email" type="email" required
+                     placeholder="example@domain.com" autocomplete="email">
+              <div class="field-error">Zəhmət olmasa düzgün e-poçt ünvanı daxil edin</div>
+            </div>
+
+            <!-- Telefon -->
+            <div class="field">
+              <label for="phone_prefix">Əlaqə nömrəsi *</label>
+              <div class="phone-row">
+                <select id="phone_prefix" name="phone_prefix" required>
+                  <option value="50">050</option>
+                  <option value="51">051</option>
+                  <option value="55" selected>055</option>
+                  <option value="99">099</option>
+                  <option value="70">070</option>
+                  <option value="77">077</option>
+                </select>
+                <input id="phone_number" name="phone_number" type="tel"
+                       inputmode="numeric" data-digit-length="7" required
+                       placeholder="XXX-XX-XX">
+              </div>
+              <div class="field-error">Zəhmət olmasa telefon nömrəsini daxil edin</div>
+            </div>
+
+            <!-- Şifrə -->
+            <div class="field">
+              <label for="password">Şifrə *</label>
+              <div class="password-wrapper">
+                <input id="password" name="password" type="password" required
+                       autocomplete="new-password" minlength="8"
+                       placeholder="Ən az 8 simvol">
+                <button type="button" class="toggle-password" data-target="password">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+              <div id="password-strength" class="password-strength"></div>
+              <div class="field-error">Şifrə ən az 8 simvol olmalıdır</div>
+            </div>
+
+            <!-- Şifrə təkrarı -->
+            <div class="field">
+              <label for="re_password">Şifrənin təkrarı *</label>
+              <div class="password-wrapper">
+                <input id="re_password" name="re_password" type="password" required
+                       autocomplete="new-password"
+                       placeholder="Şifrəni təkrarlayın">
+                <button type="button" class="toggle-password" data-target="re_password">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+              <div id="password-match" class="field-error" style="display: none;">
+                Şifrələr uyğun deyil
+              </div>
+            </div>
+
+            <!-- VOEN -->
+            <div class="field">
+              <label for="voen">VOEN *</label>
+              <input id="voen" name="voen" type="text" inputmode="numeric"
+                     data-digit-length="10" required
+                     placeholder="10 rəqəmli VOEN">
+              <div class="field-error">VOEN tam 10 rəqəm olmalıdır</div>
+            </div>
+
+            <!-- FIN kod -->
+            <div class="field">
+              <label for="finkod">FIN kod *</label>
+              <input type="text" id="finkod" name="finkod" maxlength="7"
+                     pattern="[A-Za-z0-9]{7}" required
+                     placeholder="7 simvol (hərf/rəqəm)"
+                     title="FIN kod tam 7 simvol olmalıdır (hərf və rəqəm)">
+              <div class="field-error">FIN kod tam 7 simvol olmalıdır</div>
+            </div>
+          </div>
+
+          <!-- Asan İmza bölməsi -->
+          <div class="section-title">
+            <h3>Asan İmza məlumatları</h3>
+          </div>
+
+          <div class="owner-grid">
+            <!-- ASAN IMZA -->
+            <div class="field">
+              <label for="asan_imza">Asan İmza №</label>
+              <input id="asan_imza" name="asan_imza" type="text"
+                     inputmode="numeric" data-digit-length="10"
+                     placeholder="10 rəqəmli Asan İmza">
+            </div>
+
+            <!-- ASAN ID -->
+            <div class="field">
+              <label for="asan_id">Asan ID</label>
+              <input id="asan_id" name="asan_id" type="text"
+                     inputmode="numeric" data-digit-length="6"
+                     placeholder="6 rəqəmli Asan ID">
+            </div>
+
+            <!-- PIN 1 -->
+            <div class="field">
+              <label for="pin1">PIN 1</label>
+              <div class="password-wrapper">
+                <input id="pin1" name="pin1" type="password"
+                       inputmode="numeric" data-digit-length="4"
+                       placeholder="4 rəqəmli PIN 1">
+                <button type="button" class="toggle-password" data-target="pin1">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- PIN 2 -->
+            <div class="field">
+              <label for="pin2">PIN 2</label>
+              <div class="password-wrapper">
+                <input id="pin2" name="pin2" type="password"
+                       inputmode="numeric" data-digit-length="5"
+                       placeholder="5 rəqəmli PIN 2">
+                <button type="button" class="toggle-password" data-target="pin2">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- PUK -->
+            <div class="field">
+              <label for="puk">PUK</label>
+              <div class="password-wrapper">
+                <input id="puk" name="puk" type="password"
+                       inputmode="numeric" data-digit-length="8"
+                       placeholder="8 rəqəmli PUK">
+                <button type="button" class="toggle-password" data-target="puk">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Qeyd -->
+          <div class="form-note">
+            <p><strong>Qeyd:</strong> * ilə işarələnmiş sahələr məcburidir.</p>
+            <p>Asan İmza məlumatları istəyə bağlı olaraq daxil edilə bilər.</p>
+          </div>
+
+          <!-- Submit button -->
+          <button type="submit" class="owner-submit" data-owner-submit="">
+            <span class="btn-text">Təsdiqlə və Göndər</span>
+          </button>
+
+          <!-- Göndərildikdən sonra Telegram məlumatı üçün container -->
+          <div id="telegram-info" class="telegram-info-box" style="display: none;"></div>
+        </form>
+
+        <p class="owner-login">
+          Artıq hesabınız var?
+          <a href="login.html">Daxil olun</a>
+        </p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- JavaScript faylları -->
+<script src="assets/js/register-owner.js" defer></script>
+
+<!-- Loader və telefon təsdiqi -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const loader = document.getElementById('gti-loader');
+    const siteShell = document.getElementById('site-shell');
+    const body = document.body;
+    const MIN_DURATION = 650;
+    const startTime = performance.now();
+
+    const navigationEntry = performance.getEntriesByType('navigation')[0];
+    const legacyNavType = performance.navigation?.type === 1 ? 'reload' : 'navigate';
+    const navigationType = navigationEntry?.type || legacyNavType;
+    const loaderAlreadyShown = sessionStorage.getItem('gtiLoaderShown') === '1';
+    const shouldShowLoader = navigationType === 'reload' || !loaderAlreadyShown;
+
+    const revealSite = () => {
+      if (loader) {
+        loader.classList.add('fade-out');
+        setTimeout(() => loader.remove(), 360);
+      }
+      body.classList.add('loaded');
+      body.classList.remove('loader-active');
+      if (siteShell) siteShell.style.pointerEvents = 'auto';
+    };
+
+    if (shouldShowLoader) {
+      body.classList.add('loader-active');
+      sessionStorage.setItem('gtiLoaderShown', '1');
+      const elapsed = () => performance.now() - startTime;
+      const remaining = Math.max(0, MIN_DURATION - elapsed());
+      setTimeout(revealSite, remaining);
+    } else {
+      if (loader) loader.remove();
+      body.classList.add('loaded');
+      body.classList.remove('loader-active');
+      if (siteShell) siteShell.style.pointerEvents = 'auto';
+    }
+
+    // Telefon zəngi təsdiqi
+    const phoneLink = document.getElementById('header-phone-link');
+    if (phoneLink) {
+      phoneLink.addEventListener('click', (e) => {
+        if (!confirm('Hörmətli istifadəçi, bu nömrəyə zəng etmək istəyirsiniz?')) {
+          e.preventDefault();
+        }
+      });
+    }
+
+    // Real-time şifrə yoxlaması
+    const passwordInput = document.getElementById('password');
+    const passwordStrength = document.getElementById('password-strength');
+    const rePasswordInput = document.getElementById('re_password');
+    const passwordMatch = document.getElementById('password-match');
+
+    if (passwordInput && passwordStrength) {
+      passwordInput.addEventListener('input', function() {
+        const password = this.value;
+        let strength = 'weak';
+        let message = '';
+
+        if (password.length === 0) {
+          passwordStrength.textContent = '';
+          passwordStrength.className = 'password-strength';
+          return;
+        }
+
+        if (password.length < 8) {
+          message = 'Zəif (ən az 8 simvol)';
+        } else {
+          let score = 0;
+          if (/[A-Z]/.test(password)) score++;
+          if (/[a-z]/.test(password)) score++;
+          if (/\d/.test(password)) score++;
+          if (/[^A-Za-z0-9]/.test(password)) score++;
+
+          if (score >= 4) {
+            strength = 'strong';
+            message = 'Güclü';
+          } else if (score >= 3) {
+            strength = 'medium';
+            message = 'Orta';
+          } else {
+            message = 'Zəif';
+          }
+        }
+
+        passwordStrength.textContent = `Şifrə gücü: ${message}`;
+        passwordStrength.className = `password-strength ${strength}`;
+      });
+    }
+
+    // Şifrələrin uyğunluğunun yoxlanılması
+    if (rePasswordInput && passwordInput && passwordMatch) {
+      const checkPasswordMatch = () => {
+        if (rePasswordInput.value && passwordInput.value !== rePasswordInput.value) {
+          passwordMatch.style.display = 'block';
+          return false;
+        } else {
+          passwordMatch.style.display = 'none';
+          return true;
+        }
+      };
+
+      passwordInput.addEventListener('input', checkPasswordMatch);
+      rePasswordInput.addEventListener('input', checkPasswordMatch);
+    }
+  });
+</script>
+</body>
+</html>
