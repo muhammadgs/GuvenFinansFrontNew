@@ -1,0 +1,827 @@
+/* edit_module.css */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8f9fa;
+    border-radius: 8px 8px 0 0;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #333;
+    font-size: 18px;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.close-btn:hover {
+    background: #eee;
+    color: #333;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+/* Form styles */
+.edit-task-form {
+    width: 100%;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #555;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    margin-top: 20px;
+}
+
+/* Task info styles */
+.task-info {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border-left: 4px solid #dc3545;
+}
+
+.task-info p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.task-info strong {
+    color: #333;
+    min-width: 100px;
+    display: inline-block;
+}
+
+/* Button styles */
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #545b62;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+}
+
+.btn-warning {
+    background: #ffc107;
+    color: #212529;
+}
+
+.btn-warning:hover {
+    background: #e0a800;
+}
+
+/* Toast messages */
+.custom-toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 4px;
+    color: white;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s;
+    z-index: 10000;
+}
+
+.custom-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.custom-toast.success {
+    background: #28a745;
+}
+
+.custom-toast.error {
+    background: #dc3545;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .form-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+/* Yeni CSS əlavələri */
+.status-section {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: flex-start;
+}
+
+.status-section .status-badge {
+    margin-bottom: 5px;
+}
+
+.description-container, .notes-container {
+    position: relative;
+    min-height: 40px;
+}
+
+.truncated-description, .truncated-notes {
+    max-height: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    line-height: 1.4;
+    margin-bottom: 5px;
+}
+
+.full-description, .full-notes {
+    background-color: rgba(0, 0, 0, 0.03);
+    padding: 10px;
+    border-radius: 4px;
+    border-left: 3px solid #3b82f6;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin-bottom: 5px;
+}
+
+.expand-btn {
+    background: none;
+    border: none;
+    color: #3b82f6;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s;
+    margin-top: 5px;
+}
+
+.expand-btn:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+    text-decoration: underline;
+}
+
+.expand-btn i {
+    font-size: 10px;
+}
+
+/* Tema üçün */
+[data-theme="dark"] .full-description,
+[data-theme="dark"] .full-notes {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-left-color: #60a5fa;
+}
+
+[data-theme="dark"] .expand-btn {
+    color: #60a5fa;
+}
+
+[data-theme="dark"] .expand-btn:hover {
+    background-color: rgba(96, 165, 250, 0.1);
+}
+
+/* Edit Modal CSS */
+.task-edit-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.task-edit-modal {
+    background: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .task-edit-modal {
+    background: #1e1e1e;
+    color: white;
+}
+
+.task-edit-modal .modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+[data-theme="dark"] .task-edit-modal .modal-header {
+    border-bottom-color: #374151;
+}
+
+.task-edit-modal .modal-body {
+    padding: 20px;
+}
+
+.edit-task-form .form-group {
+    margin-bottom: 15px;
+}
+
+.edit-task-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.edit-task-form .form-control {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+[data-theme="dark"] .edit-task-form .form-control {
+    background: #2d2d2d;
+    border-color: #4b5563;
+    color: white;
+}
+
+.task-edit-modal .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+/* Audio Recorder Styles */
+.audio-recorder-container {
+    border: 2px dashed #dee2e6;
+    border-radius: 10px;
+    padding: 20px;
+    background: #f8f9fa;
+    margin-top: 10px;
+}
+
+.audio-recorder-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.audio-recorder-controls .btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.audio-recorder-controls .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+#startRecordingBtn:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+#stopRecordingBtn:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+#saveRecordingBtn:hover {
+    background-color: #28a745;
+    color: white;
+}
+
+#cancelRecordingBtn:hover {
+    background-color: #6c757d;
+    color: white;
+}
+
+.audio-recorder-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+}
+
+.recording-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.recording-status i {
+    font-size: 12px;
+}
+
+.recording-status.recording i {
+    color: #dc3545;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.recording-timer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #dc3545;
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+}
+
+.audio-recorder-visualizer {
+    margin: 20px 0;
+    background: #343a40;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+#audioVisualizer {
+    display: block;
+    width: 100%;
+    height: 60px;
+    border-radius: 4px;
+}
+
+.audio-recorder-preview {
+    margin-top: 20px;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.audio-player {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.audio-player audio {
+    width: 100%;
+    height: 40px;
+    border-radius: 4px;
+}
+
+.audio-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #6c757d;
+    padding: 0 5px;
+}
+
+.audio-info span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Recording animation */
+.recording-active {
+    border-color: #dc3545 !important;
+    background: rgba(220, 53, 69, 0.05) !important;
+}
+
+/* Button states */
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn:disabled:hover {
+    transform: none !important;
+    background-color: inherit !important;
+    color: inherit !important;
+}
+/* Audio Preview Modal */
+.audio-preview-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+}
+
+.audio-preview-modal {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: modalSlideIn 0.3s ease;
+}
+
+.audio-preview-modal .modal-header {
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.audio-preview-modal .modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.audio-preview-container {
+    padding: 30px;
+}
+
+.audio-player-large {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.audio-visualizer-large {
+    background: #1a1a1a;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+#audioWaveform {
+    display: block;
+    width: 100%;
+    height: 100px;
+    border-radius: 4px;
+}
+
+.audio-controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.audio-controls .btn {
+    padding: 8px 20px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.audio-volume {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f8f9fa;
+    padding: 8px 15px;
+    border-radius: 20px;
+}
+
+.audio-volume input[type="range"] {
+    width: 100px;
+    height: 6px;
+    -webkit-appearance: none;
+    background: #dee2e6;
+    border-radius: 3px;
+    outline: none;
+}
+
+.audio-volume input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.recording-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #e3f2fd;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #1976d2;
+}
+
+.recording-info i {
+    font-size: 16px;
+}
+/* Cədvəl Seçim Radio Butonları */
+.table-selection-radios {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.radio-group {
+    display: flex;
+    align-items: center;
+}
+
+.radio-input {
+    display: none;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: var(--bg-color);
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
+.radio-label:hover {
+    background: var(--hover-bg);
+    border-color: var(--primary-color-light);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.radio-input:checked + .radio-label {
+    background: var(--primary-color-lightest);
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.radio-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-color);
+    border-radius: 8px;
+    font-size: 20px;
+    transition: all 0.3s ease;
+}
+
+.radio-input:checked + .radio-label .radio-icon {
+    background: var(--primary-color);
+    color: white;
+    transform: scale(1.1);
+}
+
+.radio-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.radio-text strong {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.radio-text small {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+/* Fərqli cədvəllər üçün rənglər */
+.radio-group:nth-child(1) .radio-icon {
+    color: #10B981; /* Yaşıl - Aktiv */
+}
+
+.radio-group:nth-child(2) .radio-icon {
+    color: #3B82F6; /* Mavi - Xarici */
+}
+
+.radio-group:nth-child(3) .radio-icon {
+    color: #6B7280; /* Boz - Arxiv */
+}
+
+.radio-input:checked + .radio-label .radio-icon {
+    color: #1e42bd !important;
+}
+
+.radio-group:nth-child(1) .radio-input:checked + .radio-label {
+    border-color: #10B981;
+    background: rgba(16, 185, 129, 0.05);
+}
+
+.radio-group:nth-child(2) .radio-input:checked + .radio-label {
+    border-color: #3B82F6;
+    background: rgba(59, 130, 246, 0.05);
+}
+
+.radio-group:nth-child(3) .radio-input:checked + .radio-label {
+    border-color: #6B7280;
+    background: rgba(107, 114, 128, 0.05);
+}
+
+/* Mobil üçün */
+@media (max-width: 768px) {
+    .radio-label {
+        padding: 12px;
+    }
+
+    .radio-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 18px;
+    }
+
+    .radio-text strong {
+        font-size: 15px;
+    }
+
+    .radio-text small {
+        font-size: 12px;
+    }
+}
