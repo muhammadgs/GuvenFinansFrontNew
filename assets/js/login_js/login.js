@@ -2,7 +2,12 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     // === LOGIN FUNCTIONS ===
-    const API_BASE = "https://guvenfinans.az/proxy.php";
+    const API_BASE = (() => {
+        const isLocalHost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+        return isLocalHost
+            ? `${window.location.protocol}//${window.location.host}/proxy.php`
+            : "https://guvenfinans.az/proxy.php";
+    })();
     const loginForm = document.getElementById('loginForm');
     const statusEl = document.getElementById('authStatus');
 
