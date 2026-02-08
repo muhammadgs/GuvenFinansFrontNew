@@ -2,11 +2,14 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     // === LOGIN FUNCTIONS ===
-    const API_BASE = (() => {
+    const API_BASES = (() => {
         const isLocalHost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+        const localProxy = `${window.location.protocol}//${window.location.host}/proxy.php`;
+        const remoteProxy = 'https://guvenfinans.az/proxy.php';
+
         return isLocalHost
-            ? `${window.location.protocol}//${window.location.host}/proxy.php`
-            : "https://guvenfinans.az/proxy.php";
+            ? [localProxy, remoteProxy]
+            : [remoteProxy];
     })();
     const loginForm = document.getElementById('loginForm');
     const statusEl = document.getElementById('authStatus');
@@ -401,17 +404,47 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('🔑 Login attempt for:', payload.username);
 
             try {
-                const res = await fetch(`${API_BASE}/api/v1/auth/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(payload),
-                    credentials: 'include' // Cookie-ləri əlavə et
-                });
+                let res = null;
+                let selectedEndpoint = '';
+
+                for (const apiBase of API_BASES) {
+                    const endpoint = `${apiBase}/api/v1/auth/login`;
+                    try {
+                        const candidate = await fetch(endpoint, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify(payload),
+                            credentials: 'include' // Cookie-ləri əlavə et
+                        });
+
+                        const contentType = candidate.headers.get('content-type') || '';
+                        const shouldFallback =
+                            candidate.status === 404
+                            && contentType.includes('text/html')
+                            && apiBase.includes(window.location.host);
+
+                        if (shouldFallback) {
+                            console.warn(`⚠️ Local proxy not found at ${endpoint}, trying fallback...`);
+                            continue;
+                        }
+
+                        res = candidate;
+                        selectedEndpoint = endpoint;
+                        break;
+                    } catch (networkErr) {
+                        console.warn(`⚠️ Request failed for ${endpoint}, trying fallback...`, networkErr);
+                    }
+                }
+
+                if (!res) {
+                    throw new Error('API ilə bağlantı qurulmadı. Local proxy və internet bağlantısını yoxlayın.');
+                }
 
                 console.log('📥 Login response status:', res.status);
+                console.log('🌐 Login endpoint:', selectedEndpoint);
 
                 let data;
                 try {
