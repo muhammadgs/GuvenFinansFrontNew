@@ -2,13 +2,15 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     // === LOGIN FUNCTIONS ===
+    const isLocalHost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
     const API_BASES = (() => {
-        const isLocalHost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
         const localProxy = `${window.location.protocol}//${window.location.host}/proxy.php`;
         const remoteProxy = 'https://guvenfinans.az/proxy.php';
 
+        // Local development zamanı remote proxy-yə fallback CORS səbəbilə bloklanır.
+        // Buna görə localhost-da yalnız local proxy istifadə edilir.
         return isLocalHost
-            ? [localProxy, remoteProxy]
+            ? [localProxy]
             : [remoteProxy];
     })();
     const loginForm = document.getElementById('loginForm');
@@ -440,7 +442,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 if (!res) {
-                    throw new Error('API ilə bağlantı qurulmadı. Local proxy və internet bağlantısını yoxlayın.');
+                    if (isLocalHost) {
+                        throw new Error('Local proxy tapılmadı. Login üçün layihəni PHP server ilə açın (məsələn: php -S localhost:8000).');
+                    }
+
+                    throw new Error('API ilə bağlantı qurulmadı. Internet bağlantısını yoxlayın.');
                 }
 
                 console.log('📥 Login response status:', res.status);
