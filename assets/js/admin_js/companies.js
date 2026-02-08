@@ -11,11 +11,11 @@ window.loadCompanies = async function(page = 1) {
     try {
         currentCompanyPage = page;
 
-        const API_BASE = window.API_BASE || "https://guvenfinans.az/proxy.php";
+        const API_BASE = window.API_BASE || window.location.origin;
         const token = localStorage.getItem('guven_token');
 
         // Axtarış parametrlərini əlavə et
-        let url = `${API_BASE}/api/v1/admin/companies?page=${page}&limit=10`;
+        let url = `${API_BASE}/api/v1/companies?page=${page}&limit=10`;
 
         // Axtarış sözünü əlavə et
         if (currentCompanySearchTerm.trim()) {
@@ -246,9 +246,9 @@ window.viewCompany = async function(id) {
             return;
         }
 
-        const API_BASE = window.API_BASE || "https://guvenfinans.az/proxy.php";
+        const API_BASE = window.API_BASE || window.location.origin;
         const token = localStorage.getItem('guven_token');
-        const response = await fetch(`${API_BASE}/api/v1/admin/companies/${id}`, {
+        const response = await fetch(`${API_BASE}/api/v1/companies/${id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -415,9 +415,9 @@ window.editCompany = async function(id) {
             return;
         }
 
-        const API_BASE = window.API_BASE || "https://guvenfinans.az/proxy.php";
+        const API_BASE = window.API_BASE || window.location.origin;
         const token = localStorage.getItem('guven_token');
-        const response = await fetch(`${API_BASE}/api/v1/admin/companies/${id}`, {
+        const response = await fetch(`${API_BASE}/api/v1/companies/${id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -512,7 +512,7 @@ window.saveCompanyChanges = async function() {
             return;
         }
 
-        const API_BASE = window.API_BASE || "https://guvenfinans.az/proxy.php";
+        const API_BASE = window.API_BASE || window.location.origin;
         const token = localStorage.getItem('guven_token');
 
         if (!token) {
@@ -579,7 +579,7 @@ window.saveCompanyChanges = async function() {
 
         // PUT request göndər
         console.log('🚀 PUT request göndərilir...');
-        const putResponse = await fetch(`${API_BASE}/api/v1/admin/companies/${companyId}`, {
+        const putResponse = await fetch(`${API_BASE}/api/v1/companies/${companyId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

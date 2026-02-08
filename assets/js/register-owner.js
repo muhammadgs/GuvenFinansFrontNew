@@ -60,7 +60,7 @@
     //  KONFİQURASİYA
 
     const CONFIG = {
-        API_BASE: window.API_BASE || window.location.origin || "https://guvenfinans.az",
+        API_BASE: window.API_BASE || window.location.origin,
         DEBOUNCE_DELAY: 800,
         PASSWORD_STRENGTH_LEVELS: {
             weak: { color: '#ef4444', minScore: 0 },

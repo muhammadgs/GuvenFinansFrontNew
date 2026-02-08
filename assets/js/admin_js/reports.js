@@ -1,6 +1,6 @@
 // assets/js/admin_js/reports.js
 
-const API_ROOT = window.API_BASE || window.location.origin || 'https://guvenfinans.az';
+const API_ROOT = window.API_BASE || window.location.origin;
 
 function getAuthHeaders() {
     const token = localStorage.getItem('admin_token') || localStorage.getItem('guven_token');

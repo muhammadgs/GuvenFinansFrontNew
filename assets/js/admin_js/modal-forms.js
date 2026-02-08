@@ -8,7 +8,7 @@ async function loadApplicationInfo(applicationId) {
 
         console.log(`🔍 İstifadəçi məlumatları yüklənir: ID=${applicationId}`);
 
-        const response = await fetch(`${API_BASE}/api/v1/admin/users/${applicationId}`, {
+        const response = await fetch(`${API_BASE}/api/v1/employees/${applicationId}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -54,7 +54,7 @@ window.submitApprovalDecision = async function() {
 
         console.log(`🔍 Qərar təsdiqlənir: ID=${selectedApplicationId}, Qərar=${decision}`);
 
-        const response = await fetch(`${API_BASE}/api/v1/admin/users/${selectedApplicationId}/review`, {
+        const response = await fetch(`${API_BASE}/api/v1/employees/${selectedApplicationId}/review`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -105,23 +105,23 @@ window.confirmDelete = async function() {
         if (window.selectedEmployeeId) {
             id = window.selectedEmployeeId;
             elementType = 'employee';
-            url = `${window.API_BASE}/api/v1/admin/employees/${id}`;
+            url = `${window.API_BASE}/api/v1/employees/${id}`;
         }
         // **2. deleteType ilə yoxla**
         else if (window.deleteType === 'company' && window.selectedCompanyId) {
             id = window.selectedCompanyId;
             elementType = 'company';
-            url = `${window.API_BASE}/api/v1/admin/companies/${id}`;
+            url = `${window.API_BASE}/api/v1/companies/${id}`;
         }
         else if (window.deleteType === 'user' && window.selectedUserId) {
             id = window.selectedUserId;
             elementType = 'user';
-            url = `${window.API_BASE}/api/v1/admin/users/${id}`;
+            url = `${window.API_BASE}/api/v1/employees/${id}`;
         }
         else if (window.deleteType === 'employee' && window.selectedEmployeeId) {
             id = window.selectedEmployeeId;
             elementType = 'employee';
-            url = `${window.API_BASE}/api/v1/admin/employees/${id}`;
+            url = `${window.API_BASE}/api/v1/employees/${id}`;
         }
         else {
             console.error('❌ Silinəcək element tapılmadı. Global variables:', {

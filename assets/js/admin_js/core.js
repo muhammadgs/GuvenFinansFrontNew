@@ -1,5 +1,5 @@
 // Admin Panel JavaScript - core.js
-const API_BASE = window.API_BASE || "https://guvenfinans.az";
+const API_BASE = window.API_BASE || window.location.origin;
 let currentUser = {};
 window.API_BASE = API_BASE;
 window.deleteType = null;
@@ -698,7 +698,7 @@ async function loadAllUsers(page = 1) {
         }
 
         // Filter parametrləri
-        let url = `${API_BASE}/api/v1/admin/users?page=${page}&limit=10`;
+        let url = `${API_BASE}/api/v1/employees?page=${page}&limit=10`;
 
         const search = document.getElementById('usersSearch');
         const statusFilter = document.getElementById('usersStatusFilter');
