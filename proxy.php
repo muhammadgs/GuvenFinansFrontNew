@@ -1,126 +1,128 @@
 <?php
-// proxy.php - FULLY FIXED VERSION
+// proxy.php
 
-$target_base = "http://vps.guvenfinans.az:8008";
+$target_base = 'http://vps.guvenfinans.az:8008';
 
-// Gələn request-i al
-$method = $_SERVER['REQUEST_METHOD'];
-$path = $_SERVER['PATH_INFO'] ?? $_SERVER['REQUEST_URI'];
+$frontend_origin = null;
+if (!empty($_SERVER['HTTP_ORIGIN'])) {
+    $frontend_origin = $_SERVER['HTTP_ORIGIN'];
+} elseif (!empty($_SERVER['HTTP_HOST'])) {
+    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $frontend_origin = $scheme . '://' . $_SERVER['HTTP_HOST'];
+}
+
+if ($frontend_origin) {
+    header('Access-Control-Allow-Origin: ' . $frontend_origin);
+    header('Vary: Origin');
+}
+header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+header('Access-Control-Allow-Methods: POST, OPTIONS, GET, PUT, PATCH, DELETE');
+
+$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+if ($method === 'OPTIONS') {
+    http_response_code(204);
+    exit;
+}
+
+$request_uri = $_SERVER['REQUEST_URI'] ?? '/';
+$parsed_path = parse_url($request_uri, PHP_URL_PATH) ?? '/';
+$script_name = $_SERVER['SCRIPT_NAME'] ?? '/proxy.php';
+
+$proxy_path = $parsed_path;
+if (str_starts_with($parsed_path, $script_name)) {
+    $proxy_path = substr($parsed_path, strlen($script_name));
+}
+
+if ($proxy_path === '' || $proxy_path === false) {
+    $proxy_path = $_GET['path'] ?? '/';
+}
+
+if (!str_starts_with($proxy_path, '/')) {
+    $proxy_path = '/' . $proxy_path;
+}
+
 $query_string = $_SERVER['QUERY_STRING'] ?? '';
+if (!empty($_GET['path'])) {
+    parse_str($query_string, $query_params);
+    unset($query_params['path']);
+    $query_string = http_build_query($query_params);
+}
 
-// Full URL yarat
-$url = $target_base . $path;
+$url = rtrim($target_base, '/') . $proxy_path;
 if ($query_string) {
     $url .= '?' . $query_string;
 }
 
-// Headers hazırla
 $headers = [];
-foreach (getallheaders() as $key => $value) {
-    if (strtolower($key) === 'host') continue;
-    if (strtolower($key) === 'content-length') continue;
-    $headers[] = "$key: $value";
-}
-
-// Əlavə headers
-$headers[] = "X-Forwarded-For: " . $_SERVER['REMOTE_ADDR'];
-$headers[] = "X-Real-IP: " . $_SERVER['REMOTE_ADDR'];
-
-// Cookie-ləri göndər
-$cookies = '';
-foreach ($_COOKIE as $key => $value) {
-    $cookies .= $key . '=' . rawurlencode($value) . '; ';
-}
-if ($cookies) {
-    $headers[] = "Cookie: " . rtrim($cookies, '; ');
-}
-
-// cURL session
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_HEADER, true); // Headers al
-curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-
-// Request body (POST, PUT, PATCH üçün)
-$input = file_get_contents('php://input');
-if ($input && in_array($method, ['POST', 'PUT', 'PATCH'])) {
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $input);
-    $headers[] = "Content-Type: application/json";
-    $headers[] = "Content-Length: " . strlen($input);
-}
-
-// Headers təyin et
-curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-// SSL problemi olarsa
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-
-// Follow redirects
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-
-// Execute
-$response = curl_exec($ch);
-$curl_info = curl_getinfo($ch);
-$curl_error = curl_error($ch);
-curl_close($ch);
-
-if ($curl_error) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Proxy error: ' . $curl_error]);
-    exit;
-}
-
-// Header və body hissələrini ayır
-$header_size = $curl_info['header_size'];
-$response_headers = substr($response, 0, $header_size);
-$response_body = substr($response, $header_size);
-
-// Backend headers-larını parse et
-$header_lines = explode("\r\n", $response_headers);
-
-// Set-Cookie headers-larını tap və frontend-ə göndər
-foreach ($header_lines as $header_line) {
-    if (stripos($header_line, 'Set-Cookie:') === 0) {
-        $cookie_header = substr($header_line, strlen('Set-Cookie:'));
-        $cookie_parts = explode(';', $cookie_header, 2);
-        $cookie_pair = trim($cookie_parts[0]);
-
-        // Cookie key-value ayır
-        $equals_pos = strpos($cookie_pair, '=');
-        if ($equals_pos !== false) {
-            $cookie_name = substr($cookie_pair, 0, $equals_pos);
-            $cookie_value = substr($cookie_pair, $equals_pos + 1);
-
-            // Cookie set et
-            setcookie(
-                $cookie_name,
-                $cookie_value,
-                [
-                    'expires' => time() + 86400 * 7, // 7 gün
-                    'path' => '/',
-                    'domain' => '.guvenfinans.az',
-                    'secure' => true,
-                    'httponly' => true,
-                    'samesite' => 'Lax'
-                ]
-            );
+if (function_exists('getallheaders')) {
+    foreach (getallheaders() as $key => $value) {
+        $lower = strtolower($key);
+        if ($lower === 'host' || $lower === 'content-length' || $lower === 'origin') {
+            continue;
         }
+        $headers[] = $key . ': ' . $value;
     }
 }
 
-// Status code göndər
-http_response_code($curl_info['http_code']);
-
-// Response headers-larını göndər (Set-Cookie xaric)
-foreach ($header_lines as $header_line) {
-    if (empty(trim($header_line))) continue;
-    if (stripos($header_line, 'Set-Cookie:') === 0) continue;
-
-    header($header_line);
+$client_ip = $_SERVER['REMOTE_ADDR'] ?? '';
+if ($client_ip) {
+    $headers[] = 'X-Forwarded-For: ' . $client_ip;
+    $headers[] = 'X-Real-IP: ' . $client_ip;
 }
 
-// Body göndər
+if (!empty($_COOKIE)) {
+    $pairs = [];
+    foreach ($_COOKIE as $key => $value) {
+        $pairs[] = $key . '=' . rawurlencode($value);
+    }
+    $headers[] = 'Cookie: ' . implode('; ', $pairs);
+}
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HEADER, true);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+
+$input = file_get_contents('php://input');
+if ($input !== false && $input !== '' && in_array($method, ['POST', 'PUT', 'PATCH', 'DELETE'], true)) {
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $input);
+}
+
+$response = curl_exec($ch);
+$curl_error = curl_error($ch);
+$curl_info = curl_getinfo($ch);
+curl_close($ch);
+
+if ($response === false || $curl_error) {
+    http_response_code(502);
+    header('Content-Type: application/json');
+    echo json_encode(['error' => 'Proxy error', 'details' => $curl_error]);
+    exit;
+}
+
+$header_size = $curl_info['header_size'] ?? 0;
+$response_headers = substr($response, 0, $header_size);
+$response_body = substr($response, $header_size);
+$header_lines = explode("\r\n", $response_headers);
+
+http_response_code($curl_info['http_code'] ?? 200);
+
+foreach ($header_lines as $header_line) {
+    if ($header_line === '' || stripos($header_line, 'HTTP/') === 0) {
+        continue;
+    }
+
+    if (stripos($header_line, 'Transfer-Encoding:') === 0) {
+        continue;
+    }
+
+    header($header_line, false);
+}
+
 echo $response_body;
-?>
