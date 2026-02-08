@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const isLocalHost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
     const API_BASES = (() => {
         const localProxy = `${window.location.protocol}//${window.location.host}`;
-        const remoteProxy = 'https://guvenfinans.az';
+        const remoteProxy = window.location.origin;
 
         // Local development zamanı remote proxy-yə fallback CORS səbəbilə bloklanır.
         // Buna görə localhost-da yalnız local proxy istifadə edilir.

@@ -15,7 +15,7 @@
     let companyInfoData = null;
 
     // API Configuration
-    const API_BASE = window.API_BASE || window.location.origin || 'https://guvenfinans.az'; // Direct API base
+    const API_BASE = window.API_BASE || window.location.origin; // Direct API base
     const API_VERSION = '/api/v1';
 
     // Preloader'ı gizlə

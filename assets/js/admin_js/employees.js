@@ -107,7 +107,7 @@ window.displayEmployees = function(employees) {
 window.debugEmployeesAPI = async function() {
     try {
         const token = localStorage.getItem('guven_token');
-        const response = await fetch(`${window.API_BASE}/api/v1/admin/employees?limit=5`, {
+        const response = await fetch(`${window.API_BASE}/api/v1/employees?limit=5`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -151,7 +151,7 @@ window.loadEmployees = async function(page = 1) {
         }
 
         // URL yarat
-        let url = `${window.API_BASE || 'https://guvenfinans.az/proxy.php'}/api/v1/admin/employees?page=${page}&limit=10`;
+        let url = `${window.API_BASE || window.location.origin}/api/v1/employees?page=${page}&limit=10`;
 
         // Axtarış filterləri
         const search = document.getElementById('employeesSearch');
@@ -222,7 +222,7 @@ window.viewEmployee = async function(id) {
             console.log(`📡 Employees list-dən axtarılır: ID=${id}`);
 
             // Əvvəlcə employees list-dən tap
-            const response = await fetch(`${window.API_BASE || 'https://guvenfinans.az/proxy.php'}/api/v1/admin/employees?limit=100`, {
+            const response = await fetch(`${window.API_BASE || window.location.origin}/api/v1/employees?limit=100`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -254,7 +254,7 @@ window.viewEmployee = async function(id) {
         if (!employee) {
             try {
                 console.log(`📡 Users endpoint-ə sorğu: /users/${id}`);
-                const userResponse = await fetch(`${window.API_BASE || 'https://guvenfinans.az/proxy.php'}/api/v1/admin/users/${id}`, {
+                const userResponse = await fetch(`${window.API_BASE || window.location.origin}/api/v1/employees/${id}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -395,7 +395,7 @@ window.editEmployee = async function(id) {
         // **YENİ STRATEGİYA: Əvvəlcə Users endpoint-inə get**
         try {
             console.log(`📡 Users endpoint-ə sorğu: /users/${id}`);
-            const userResponse = await fetch(`${window.API_BASE || 'https://guvenfinans.az/proxy.php'}/api/v1/admin/users/${id}`, {
+            const userResponse = await fetch(`${window.API_BASE || window.location.origin}/api/v1/employees/${id}`, {
                 headers: {
                     'Accept': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -421,7 +421,7 @@ window.editEmployee = async function(id) {
         if (employee && employee.id) {
             try {
                 console.log(`🔍 Employees məlumatları axtarılır (user_id=${employee.id})`);
-                const employeesResponse = await fetch(`${window.API_BASE || 'https://guvenfinans.az/proxy.php'}/api/v1/admin/employees?user_id=${employee.id}&limit=1`, {
+                const employeesResponse = await fetch(`${window.API_BASE || window.location.origin}/api/v1/employees?user_id=${employee.id}&limit=1`, {
                     headers: {
                         'Accept': 'application/json',
                         'Authorization': `Bearer ${token}`
@@ -729,8 +729,8 @@ window.saveEmployeeChanges = async function() {
             return;
         }
 
-        // **DÜZGÜN URL: /api/v1/admin/employees/{employee_id}**
-        const url = `${window.API_BASE}/api/v1/admin/employees/${employeeId}`;
+        // **DÜZGÜN URL: /api/v1/employees/{employee_id}**
+        const url = `${window.API_BASE}/api/v1/employees/${employeeId}`;
         console.log(`📨 PUT ${url}`);
 
         const response = await fetch(url, {
@@ -882,7 +882,7 @@ window.deleteEmployee = async function() {
 
         try {
             // 1. DELETE method-u yoxla
-            const deleteResponse = await fetch(`${window.API_BASE}/api/v1/admin/employees/${employeeId}`, {
+            const deleteResponse = await fetch(`${window.API_BASE}/api/v1/employees/${employeeId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -905,7 +905,7 @@ window.deleteEmployee = async function() {
         // **2. Əgər DELETE işləmirsə, POST ilə sil**
         if (!success) {
             try {
-                const postResponse = await fetch(`${window.API_BASE}/api/v1/admin/employees/${employeeId}/delete`, {
+                const postResponse = await fetch(`${window.API_BASE}/api/v1/employees/${employeeId}/delete`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`

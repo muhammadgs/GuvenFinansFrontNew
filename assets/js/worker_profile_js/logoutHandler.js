@@ -57,7 +57,7 @@ class LogoutHandler {
                           localStorage.getItem('access_token');
 
             if (token) {
-                const response = await fetch('https://guvenfinans.az/api/v1/auth/logout', {
+                const response = await fetch(`${window.API_BASE || window.location.origin}/api/v1/auth/logout`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
