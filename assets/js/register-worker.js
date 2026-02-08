@@ -15,7 +15,7 @@
     let companyInfoData = null;
 
     // API Configuration
-    const API_BASE = '/proxy.php'; // PHP proxy endpoint
+    const API_BASE = window.API_BASE || window.location.origin || 'https://guvenfinans.az'; // Direct API base
     const API_VERSION = '/api/v1';
 
     // Preloader'ı gizlə
@@ -208,8 +208,8 @@
         verifyBtn.disabled = true;
 
         try {
-            // Şirkət kodu yoxlama - GET /api/v1/companies/code/{code}
-            const endpoint = `${API_VERSION}/companies/code/${encodeURIComponent(code)}`;
+            // Şirkət kodu yoxlama - GET /api/v1/companies/{code}
+            const endpoint = `${API_VERSION}/companies/${encodeURIComponent(code)}`;
             console.log(`🔍 Company verification: GET ${endpoint}`);
 
             const response = await apiRequest(endpoint, 'GET');
@@ -586,8 +586,8 @@
             console.log('🔍 JSON string:', jsonString);
             console.log('🔍 JSON parse test:', JSON.parse(jsonString));
 
-            // DÜZGÜN ENDPOINT: /api/v1/employees/register/{company_code}
-            const endpoint = `${API_VERSION}/employees/register/${encodeURIComponent(validation.data.companyCode)}`;
+            // DÜZGÜN ENDPOINT: /api/v1/employees
+            const endpoint = `${API_VERSION}/employees`;
             console.log(`📤 Employee registration: POST ${endpoint}`);
 
             // Backend-ə göndər
@@ -632,7 +632,7 @@
             if (error.message.includes('405')) {
                 errorMessage = 'Method uyğun deyil. Endpoint-i yoxlayın.';
             } else if (error.message.includes('404')) {
-                errorMessage = 'Qeydiyyat endpoint-i tapılmadı. Path: /api/v1/employees/register/{company_code}';
+                errorMessage = 'Qeydiyyat endpoint-i tapılmadı. Path: /api/v1/employees';
             } else if (error.message.includes('400') || error.message.includes('422')) {
                 // Backend validation xətası
                 errorMessage = 'Validation xətası';
@@ -680,9 +680,9 @@
                 showAlert(`❌ ${errorMessage}`, 'error');
 
                 // Əlavə məlumat
-                console.error('🔍 SQL Error details: Backend-de employees/register endpointində SQL query parametr xətası var.');
+                console.error('🔍 SQL Error details: Backend-də /employees endpointində SQL query parametr xətası var.');
                 console.error('🔍 Problem: Python SQL query-də %s placeholder-ları ilə göndərilən parametr sayı uyğun gəlmir.');
-                console.error('🔍 Həll: Backend developer employees_service.py faylında register_employee_public funksiyasını yoxlamalıdır.');
+                console.error('🔍 Həll: Backend developer employees service create funksiyasını yoxlamalıdır.');
                 return;
             } else {
                 errorMessage = error.message;
@@ -845,7 +845,7 @@
 
         console.log('✅ System initialized - Ready for employee registration');
         console.log('📋 Schema: EmployeeRegister');
-        console.log('📍 Endpoint: POST /api/v1/employees/register/{company_code}');
+        console.log('📍 Endpoint: POST /api/v1/employees');
         console.log('🔑 Required fields: ceo_name, ceo_lastname, ceo_email, ceo_phone, ceo_password, fin_code, gender, father_name');
         console.log('⚡ Important: gender should be lowercase (male, female, other)');
         console.log('⚡ Important: father_name is REQUIRED by backend');
