@@ -1,5 +1,10 @@
 // apiService.js - TAM VERSİYA
-const API_BASE = "https://guvenfinans.az/proxy.php";
+const API_BASE = (() => {
+    const isLocalHost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+    return isLocalHost
+        ? `${window.location.protocol}//${window.location.host}/proxy.php`
+        : "https://guvenfinans.az/proxy.php";
+})();
 
 async function makeApiRequest(endpoint, method = 'GET', data = null, requiresAuth = true) {
     console.group(`📡 API: ${method} ${endpoint}`);
