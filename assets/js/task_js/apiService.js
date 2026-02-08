@@ -1,5 +1,5 @@
 // apiService.js - TAM VERSİYA
-const API_BASE = "https://guvenfinans.az/proxy.php";
+const API_BASE = "http://vps.guvenfinans.az:8008";
 
 async function makeApiRequest(endpoint, method = 'GET', data = null, requiresAuth = true) {
     console.group(`📡 API: ${method} ${endpoint}`);
