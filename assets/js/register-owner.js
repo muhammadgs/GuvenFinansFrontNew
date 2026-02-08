@@ -60,7 +60,7 @@
     //  KONFİQURASİYA
 
     const CONFIG = {
-        API_BASE: "https://guvenfinans.az/proxy.php",
+        API_BASE: window.API_BASE || window.location.origin || "https://guvenfinans.az",
         DEBOUNCE_DELAY: 800,
         PASSWORD_STRENGTH_LEVELS: {
             weak: { color: '#ef4444', minScore: 0 },
@@ -217,7 +217,7 @@
 
         // API SERVICE bölməsində - registerCompany funksiyasını bu şəkildə düzəldin:
     async registerCompany(data) {
-        let url = `${CONFIG.API_BASE}/api/v1/companies/create_company_subsidiaries`;
+        let url = `${CONFIG.API_BASE}/api/v1/companies`;
 
         console.log('🔍 DEBUG - registerCompany called:', {
             originalData: data,
@@ -225,19 +225,8 @@
             hasParentCode: !!data.parent_company_code
         });
 
-        // Query parameter əlavə et
-        if (data.parent_company_code && data.parent_company_code.trim() !== '') {
-            const encodedCode = encodeURIComponent(data.parent_company_code.trim());
-            url += `?company_code=${encodedCode}`;
-            console.log(`✅ Şirkət kodu əlavə edildi: ${data.parent_company_code}`);
-            console.log(`✅ Final URL: ${url}`);
-        } else {
-            console.log('ℹ️ Şirkət kodu yoxdur - müstəqil şirkət');
-        }
-
         console.log('📤 Sending request to:', url);
 
-        // ⚠️ DİQQƏT: parent_company_code artıq body-də qala bilər, həm də query param kimi göndərilir
         console.log('📦 Request body:', {
             ...data,
             ceo_password: '••••••••'
@@ -256,7 +245,7 @@
                 throw new Error('Şirkət kodu daxil edilməlidir');
             }
 
-            return await this.request(`${CONFIG.API_BASE}/api/v1/companies/code/${encodeURIComponent(cleanCode)}`, {
+            return await this.request(`${CONFIG.API_BASE}/api/v1/companies/${encodeURIComponent(cleanCode)}`, {
                 method: 'GET'
             });
         },
@@ -268,9 +257,9 @@
                 throw new Error('VOEN 10 rəqəm olmalıdır');
             }
 
-            return await this.request(`${CONFIG.API_BASE}/api/v1/companies/check/voen/${digits}`, {
-                method: 'GET'
-            });
+            // Yeni API siyahısında ayrıca VOEN endpoint-i yoxdur.
+            // Bu səbəbdən yalnız format validasiyası edilir.
+            return { success: true, voen: digits, message: 'VOEN formatı doğrudur' };
         }
     };
 

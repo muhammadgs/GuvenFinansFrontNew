@@ -1,112 +1,80 @@
 // assets/js/admin_js/reports.js
 
-let currentReportsPage = 1;
-const reportsLimit = 10;
+const API_ROOT = window.API_BASE || window.location.origin || 'https://guvenfinans.az';
 
-// Hesabatları yüklə
-window.loadReports = function() {
-    const month = document.getElementById('reportMonth') ? document.getElementById('reportMonth').value : '';
-    const year = document.getElementById('reportYear') ? document.getElementById('reportYear').value : '';
-
-    console.log('📊 Hesabatlar yüklənir...', { month, year });
-
-    // API endpoint
-    let url = `/proxy.php/api/v1/admin/reports?page=${currentReportsPage}&limit=${reportsLimit}`;
-
-    if (month) {
-        url += `&month=${month}`;
-    }
-
-    if (year) {
-        url += `&year=${year}`;
-    }
-
-    console.log('Request URL:', url);
-
+function getAuthHeaders() {
     const token = localStorage.getItem('admin_token') || localStorage.getItem('guven_token');
+    return {
+        'Authorization': token ? `Bearer ${token}` : '',
+        'Content-Type': 'application/json'
+    };
+}
 
-    fetch(url, {
+async function fetchReport(endpoint) {
+    const response = await fetch(`${API_ROOT}/api/v1/reports/${endpoint}`, {
         method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + token,
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Hesabat məlumatları:', data);
-        displayReports(data);
-        if (data.stats) {
-            updateReportStats(data.stats);
-        }
-    })
-    .catch(error => {
+        headers: getAuthHeaders(),
+        credentials: 'include'
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+    }
+
+    return response.json();
+}
+
+window.loadReports = async function() {
+    try {
+        const [gender, birthdays, ageDistribution] = await Promise.all([
+            fetchReport('gender'),
+            fetchReport('birthdays'),
+            fetchReport('age-distribution')
+        ]);
+
+        displayReports({ gender, birthdays, ageDistribution });
+        updateReportStats({ gender, birthdays, ageDistribution });
+    } catch (error) {
         console.error('Hesabatları yükləmək xətası:', error);
         if (typeof showError === 'function') {
             showError('Hesabatları yükləmək mümkün olmadı: ' + error.message);
-        } else {
-            console.error('showError funksiyası tapılmadı');
         }
-    });
+    }
 };
 
-// Hesabatları göstər
 function displayReports(data) {
     const reportsBody = document.getElementById('reportsBody');
+    if (!reportsBody) return;
 
-    if (!reportsBody) {
-        console.error('reportsBody elementi tapılmadı');
-        return;
-    }
+    const birthdayCount = Array.isArray(data.birthdays) ? data.birthdays.length : (data.birthdays?.count || 0);
+    const genderData = data.gender?.data || data.gender;
+    const ageData = data.ageDistribution?.data || data.ageDistribution;
 
-    if (!data.reports || data.reports.length === 0) {
-        reportsBody.innerHTML = `
-            <tr>
-                <td colspan="6" class="text-center">Məlumat tapılmadı</td>
-            </tr>
-        `;
-        return;
-    }
-
-    reportsBody.innerHTML = data.reports.map(report => `
+    reportsBody.innerHTML = `
         <tr>
-            <td>${formatDate(report.date)}</td>
-            <td>${report.new_registrations || 0}</td>
-            <td>${report.approved || 0}</td>
-            <td>${report.rejected || 0}</td>
-            <td>${report.new_companies || 0}</td>
-            <td>${report.new_employees || 0}</td>
+            <td>${new Date().toLocaleDateString('az-AZ')}</td>
+            <td>${genderData?.male ?? genderData?.men ?? 0}</td>
+            <td>${genderData?.female ?? genderData?.women ?? 0}</td>
+            <td>${birthdayCount}</td>
+            <td>${ageData?.['18-25'] ?? 0}</td>
+            <td>${ageData?.['26-35'] ?? 0}</td>
         </tr>
-    `).join('');
-
-    // Pagination yarat
-    if (typeof createPagination === 'function') {
-        createPagination(
-            data.pagination || { current_page: 1, total_pages: 1, total: data.reports.length },
-            'reportsPagination',
-            (page) => {
-                currentReportsPage = page;
-                loadReports();
-            }
-        );
-    }
+    `;
 }
 
-// Hesabat statistikalarını yenilə
 function updateReportStats(stats) {
+    const genderData = stats.gender?.data || stats.gender || {};
+    const ageData = stats.ageDistribution?.data || stats.ageDistribution || {};
+    const birthdayCount = Array.isArray(stats.birthdays) ? stats.birthdays.length : (stats.birthdays?.count || 0);
+
     const elements = {
-        'monthlyRegistrationsReport': stats.monthly_registrations || 0,
-        'newCompaniesReport': stats.new_companies || 0,
-        'newEmployeesReport': stats.new_employees || 0,
-        'approvalRateReport': (stats.approval_rate || 0) + '%'
+        monthlyRegistrationsReport: (genderData.male || genderData.men || 0) + (genderData.female || genderData.women || 0),
+        newCompaniesReport: ageData['18-25'] || 0,
+        newEmployeesReport: birthdayCount,
+        approvalRateReport: '-'
     };
 
-    Object.keys(elements).forEach(id => {
+    Object.keys(elements).forEach((id) => {
         const element = document.getElementById(id);
         if (element) {
             element.textContent = elements[id];
@@ -114,130 +82,16 @@ function updateReportStats(stats) {
     });
 }
 
-// Hesabatı ixrac et
 window.exportReport = function() {
-    const month = document.getElementById('reportMonth') ? document.getElementById('reportMonth').value : '';
-    const year = document.getElementById('reportYear') ? document.getElementById('reportYear').value : '';
-
-    let url = `/proxy.php/api/v1/admin/reports/export`;
-
-    const params = new URLSearchParams();
-    if (month) params.append('month', month);
-    if (year) params.append('year', year);
-
-    if (params.toString()) {
-        url += '?' + params.toString();
-    }
-
-    // Yükləmə başladı bildirişi
     if (typeof showNotification === 'function') {
-        showNotification('Hesabat yüklənir...', 'info');
+        showNotification('Yeni API-də export endpoint mövcud deyil.', 'warning');
     }
-
-    const token = localStorage.getItem('admin_token') || localStorage.getItem('guven_token');
-
-    // API-dən fayl yüklə
-    fetch(url, {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + token
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.blob();
-    })
-    .then(blob => {
-        // Faylı yüklə
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `hesabat_${new Date().toISOString().split('T')[0]}.xlsx`;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-
-        if (typeof showSuccess === 'function') {
-            showSuccess('Hesabat uğurla yükləndi');
-        }
-    })
-    .catch(error => {
-        console.error('Hesabatı ixrac etmək xətası:', error);
-        if (typeof showError === 'function') {
-            showError('Hesabatı ixrac etmək mümkün olmadı: ' + error.message);
-        }
-    });
 };
 
-// İl seçimlərini yüklə
-function loadYearOptions() {
-    const select = document.getElementById('reportYear');
-    if (!select) return;
-
-    const currentYear = new Date().getFullYear();
-
-    // Əvvəlcə mövcud seçimləri təmizlə
-    select.innerHTML = '<option value="">Bütün illər</option>';
-
-    // Son 5 il üçün seçimlər əlavə et
-    for (let i = currentYear; i >= currentYear - 5; i--) {
-        const option = document.createElement('option');
-        option.value = i;
-        option.textContent = i;
-        if (i === currentYear) {
-            option.selected = true;
-        }
-        select.appendChild(option);
-    }
-}
-
-// Tarixi formatla
-function formatDate(dateString) {
-    if (!dateString) return '-';
-
-    try {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('az-AZ', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-        });
-    } catch (error) {
-        return dateString;
-    }
-}
-
-// Səhifə yüklənəndə il seçimlərini yüklə
 document.addEventListener('DOMContentLoaded', function() {
-    loadYearOptions();
-
-    // Hesabatlar səhifəsinə keçid zamanı hesabatları avtomatik yüklə
     document.querySelectorAll('.menu-item[data-page="reports"]').forEach(item => {
         item.addEventListener('click', function() {
-            // Kiçik gecikmə ilə hesabatları yüklə
-            setTimeout(() => {
-                const reportsPage = document.getElementById('reportsPage');
-                if (reportsPage && !reportsPage.classList.contains('hidden')) {
-                    if (typeof loadReports === 'function') {
-                        loadReports();
-                    } else {
-                        console.error('loadReports funksiyası tapılmadı');
-                    }
-                }
-            }, 100);
+            setTimeout(() => window.loadReports(), 300);
         });
     });
-
-    // Reports səhifəsində olduqda hesabatları avtomatik yüklə
-    if (document.getElementById('reportsPage') &&
-        !document.getElementById('reportsPage').classList.contains('hidden')) {
-        setTimeout(() => {
-            if (typeof loadReports === 'function') {
-                loadReports();
-            }
-        }, 500);
-    }
 });
