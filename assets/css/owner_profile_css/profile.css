@@ -1,3 +1,39 @@
+/* Profile page layout and background refresh */
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    background-image: url("../../images/2%207.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.container,
+.profile-container,
+.profile-wrapper,
+.main-content,
+.profile-grid {
+    width: 98%;
+    max-width: 1800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (max-width: 768px) {
+    .container,
+    .profile-container,
+    .profile-wrapper,
+    .main-content,
+    .profile-grid {
+        width: calc(100% - 1.5rem);
+        max-width: none;
+    }
+}
+
 /* Profil səhifəsi üçün əlavə CSS */
 
 /* Şəkil yükləmə sahəsi üçün */
