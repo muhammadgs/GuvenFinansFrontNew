@@ -2,7 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     // === LOGIN FUNCTIONS ===
-    const API_BASE = "http://vps.guvenfinans.az";
+    const API_BASE = "http://vps.guvenfinans.az:8008";
     const loginForm = document.getElementById('loginForm');
     const statusEl = document.getElementById('authStatus');
 
@@ -403,7 +403,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         'Accept': 'application/json'
                     },
                     body: JSON.stringify(payload),
-                    credentials: 'include' // Cookie-ləri əlavə et
+                    credentials: 'include',
+                    mode: "cors"// Cookie-ləri əlavə et
+
                 });
 
                 console.log('📥 Login response status:', res.status);

@@ -1,7 +1,7 @@
 // assets/js/dashboard-router.js
 
 (function () {
-    var API_BASE = "http://vps.guvenfinans.az";
+    var API_BASE = "http://vps.guvenfinans.az:8008";
     var USER_ME_ENDPOINT = "/api/v1/auth/me";
     var statusEl = document.getElementById('routing-status');
 
