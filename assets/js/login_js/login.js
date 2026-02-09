@@ -2,7 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     // === LOGIN FUNCTIONS ===
-    const API_BASE = window.__API_BASE__ || "/proxy.php";
+    const API_BASE = "http://vps.guvenfinans.az:8008";
     const loginForm = document.getElementById('loginForm');
     const statusEl = document.getElementById('authStatus');
 
