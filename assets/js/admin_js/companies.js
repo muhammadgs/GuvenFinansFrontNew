@@ -11,7 +11,7 @@ window.loadCompanies = async function(page = 1) {
     try {
         currentCompanyPage = page;
 
-        const API_BASE = window.API_BASE || "https://guvenfinans.az/proxy.php";
+        const API_BASE = window.API_BASE || "http://vps.guvenfinans.az:8008";
         const token = localStorage.getItem('guven_token');
 
         // Axtarış parametrlərini əlavə et

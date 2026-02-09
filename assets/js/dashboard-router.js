@@ -1,7 +1,7 @@
 // assets/js/dashboard-router.js
 
 (function () {
-    var API_BASE = "https://guvenfinans.az/proxy.php";
+    var API_BASE = "http://vps.guvenfinans.az";
     var USER_ME_ENDPOINT = "/api/v1/auth/me";
     var statusEl = document.getElementById('routing-status');
 
