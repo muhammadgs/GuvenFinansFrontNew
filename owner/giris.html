@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Güvən Finans | Giriş</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600;700&display=swap" rel="stylesheet"/>
+
+  <link rel="stylesheet" href="../assets/css/owner_profile_css/profile.css">
+</head>
+
+<body>
+<div class="profile-container">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-icon"><i class="fa-solid fa-chart-line"></i></div>
+      <div class="brand-text">
+        <h1 class="brand-title">Güvən Finans</h1>
+        <p class="brand-subtitle">Güvənlə Başla</p>
+      </div>
+    </div>
+
+    <div class="topbar-actions">
+      <button id="settingsToggle" class="icon-btn" type="button" aria-label="Tənzimləmələr">
+        <i class="fa-solid fa-gear"></i>
+      </button>
+
+      <div class="user-pill">
+        <div class="user-avatar">GF</div>
+        <div class="user-info">
+          <p class="user-company" id="companyNameDisplay">Şirkətin adı qeyd olunmayıb</p>
+          <p class="user-name" id="userNameDisplay">Adınızı qeyd edin</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="settings-popover">
+    <div id="settingsMenu" class="settings-menu hidden">
+      <a href="../index.html" class="menu-link">
+        <i class="fa-solid fa-house"></i>
+        Ana Səhifə
+      </a>
+      <button class="menu-link" id="logoutButton" type="button">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Çıxış
+      </button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <h2 class="sidebar-title">İdarəetmə</h2>
+      <nav class="sidebar-nav">
+        <a href="./giris.html" class="sidebar-link sidebar-link--active">
+          <i class="fa-solid fa-door-open"></i>
+          Giriş
+        </a>
+
+        <a href="./owp.html" class="sidebar-link">
+          <i class="fa-solid fa-user"></i>
+          Şirkət Profili
+        </a>
+
+        <a href="../diogram/draw.html" class="sidebar-link">
+          <i class="fa-solid fa-chart-pie"></i>
+          Diaqram
+        </a>
+
+        <a href="../task/task.html" class="sidebar-link">
+          <i class="fa-solid fa-list-check"></i>
+          Task Manager
+        </a>
+
+        <!-- owner-də olan digər linkləri səndəki kimi saxla -->
+      </nav>
+    </aside>
+
+    <main class="content-card">
+      <section class="welcome">
+        <div class="welcome-card">
+          <span class="section-badge">Giriş</span>
+          <h2 class="welcome-title">
+            Xoş gəldiniz, <span id="welcomeName">...</span> 👋
+          </h2>
+          <p class="section-desc">
+            Şirkət idarəetmə panelinə xoş gəldiniz.
+          </p>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<!-- Owner-də owp.html-də olan script-ləri eynilə burada saxla -->
+<script src="../assets/js/owner_profile_js/main.js"></script>
+
+<script>
+  (function () {
+    function pickName() {
+      const dom = document.getElementById("userNameDisplay");
+      const text = dom ? dom.textContent.trim() : "";
+      if (text && !/Adınızı qeyd edin/i.test(text)) return text;
+
+      try {
+        const keys = ["user","currentUser","profile","workerProfile","ownerProfile"];
+        for (const k of keys) {
+          const raw = localStorage.getItem(k);
+          if (!raw) continue;
+          const obj = JSON.parse(raw);
+          const full =
+                  obj.fullName ||
+                  obj.name ||
+                  [obj.firstName, obj.lastName].filter(Boolean).join(" ");
+          if (full) return full;
+        }
+      } catch (e) {}
+      return "";
+    }
+
+    function tick() {
+      const name = pickName();
+      if (name) {
+        document.getElementById("welcomeName").textContent = name;
+        return;
+      }
+      setTimeout(tick, 200);
+    }
+
+    document.addEventListener("DOMContentLoaded", tick);
+  })();
+</script>
+</body>
+</html>

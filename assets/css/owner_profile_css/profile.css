@@ -444,3 +444,21 @@ button{ font-family:inherit; }
     transform:translateY(-2px);
     background:#6aa9ff;
 }
+
+.welcome-card{
+    background:#fff;
+    border-radius:var(--radius-3xl);
+    box-shadow:var(--shadow-soft);
+    padding:36px;
+}
+
+.welcome-title{
+    margin:12px 0 0;
+    font-size:34px;
+    font-weight:800;
+    color:var(--text-dark);
+}
+
+@media (max-width:768px){
+    .welcome-title{ font-size:26px; }
+}
